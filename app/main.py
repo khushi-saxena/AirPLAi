@@ -1,6 +1,7 @@
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
+from fastapi.responses import RedirectResponse
 
 from app.database import Base, engine
 from app.routers import events, games, players
@@ -25,6 +26,12 @@ app = FastAPI(
 app.include_router(events.router)
 app.include_router(games.router)
 app.include_router(players.router)
+
+
+@app.get("/", include_in_schema=False)
+def root():
+    # the shared demo link lands on the interactive docs
+    return RedirectResponse(url="/docs")
 
 
 @app.get("/health", tags=["meta"])
